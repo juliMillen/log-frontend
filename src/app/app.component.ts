@@ -4,6 +4,7 @@ import { HeaderComponent } from "./shared/header/header.component";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { FooterComponent } from "./shared/footer/footer.component";
 
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, HeaderComponent, DashboardComponent, FooterComponent],
