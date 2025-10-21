@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginService } from '../../services/auth/login.service';
+import { LoginRequest } from '../../services/auth/LoginRequest';
 
 
 @Component({
@@ -15,7 +17,7 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router:Router) {}
+  constructor(private formBuilder: FormBuilder, private router:Router, private loginService:LoginService) {}
 
   
   ngOnInit(): void {
@@ -36,7 +38,17 @@ export class LoginComponent implements OnInit {
 
   login(){
     if(this.loginForm.valid){
-      console.log("Llamar al servicio de login");
+      this.loginService.login(this.loginForm.value as LoginRequest).subscribe({
+        next: (userData) => {
+          console.log(userData);
+        },
+        error: (err) => {
+          console.error(err);
+        },
+        complete: () => {
+          console.info("Login completo");
+        }
+      });
       this.router.navigateByUrl('/inicio');
       this.loginForm.reset();
     }else{
