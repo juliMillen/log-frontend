@@ -9,49 +9,51 @@ import { LoginRequest } from '../../services/auth/LoginRequest';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+  loginError: string = "";
 
   loginForm!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router:Router, private loginService:LoginService) {}
+  constructor(private formBuilder: FormBuilder, private router: Router, private loginService: LoginService) { }
 
-  
+
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       email: ['julimillen@gmail.com', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });
-      
+
   }
 
-  get email(){
+  get email() {
     return this.loginForm.get('email');
   }
 
-  get password(){
+  get password() {
     return this.loginForm.get('password');
   }
 
-  login(){
-    if(this.loginForm.valid){
+  login() {
+    if (this.loginForm.valid) {
       this.loginService.login(this.loginForm.value as LoginRequest).subscribe({
         next: (userData) => {
           console.log(userData);
         },
         error: (err) => {
           console.error(err);
+          this.loginError = err;
         },
         complete: () => {
           console.info("Login completo");
+          this.router.navigateByUrl('/inicio');
+          this.loginForm.reset();
         }
       });
-      this.router.navigateByUrl('/inicio');
-      this.loginForm.reset();
-    }else{
+    } else {
       this.loginForm.markAllAsTouched();
       alert("Error");
     }
